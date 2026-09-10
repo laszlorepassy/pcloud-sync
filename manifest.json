@@ -1,8 +1,8 @@
 {
 	"id": "pcloud-vault-clone",
 	"name": "pCloud Sync",
-	"version": "2.0.0",
-	"minAppVersion": "1.6.6",
+	"version": "2.0.1",
+	"minAppVersion": "1.12.3",
 	"description": "Sync your vault to a pCloud folder as plain, unencrypted files. Notes edited on two devices are merged paragraph by paragraph, right in the note, with no separate conflict files.",
 	"author": "Laszlo Repassy",
 	"authorUrl": "",
