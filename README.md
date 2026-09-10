@@ -1,9 +1,9 @@
 # pCloud Sync
 
 An Obsidian plugin that mirrors the whole vault into a pCloud folder as **plain,
-unencrypted files** — they can be opened straight from pCloud's own app or web
-interface, and cloned back down onto any other device (desktop or mobile) with this
-same plugin.
+unencrypted files**, optimized for mobile too — they can be opened straight from
+pCloud's own app or web interface, and cloned back down onto any other device (desktop
+or mobile) with this same plugin.
 
 **Requires a [pCloud](https://www.pcloud.com/) account.** This plugin's only network use
 is talking directly to pCloud's own API to read and write your vault's files — no other
@@ -15,7 +15,11 @@ into.
 - Opening or leaving a note runs a quick, single-file sync **quietly in the
   background** — nothing visible happens by default. A full sync also runs
   automatically at startup and every 10 minutes, just as quietly.
-- Up to **3 files** transfer at once, so a full sync stays fast.
+- Up to **3 files** transfer at once on desktop (1 on mobile, and large files always
+  get a lane of their own) — small notes still sync at full speed either way.
+- Downloads always arrive in small pieces rather than all at once, and uploads or notes
+  over 25 MB are skipped on mobile with a clear message rather than risking a crash —
+  sync those from desktop instead.
 - If a Markdown note was edited on both sides since the last sync, the plugin
   **merges it paragraph by paragraph (line by line)** — a three-way (base/local/remote)
   merge algorithm. No separate "conflict" file is ever created: the losing (older)
