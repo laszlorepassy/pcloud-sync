@@ -36,6 +36,12 @@ into.
 - Binary files (images, attachments) have no meaningful way to merge their bytes —
   both versions survive there: the newer one at the original path, the older one next
   to it as a timestamped copy.
+- On mobile, signing in leads with pCloud's copy-a-code method rather than the
+  browser hand-off — the `obsidian://` link that hand-off relies on often doesn't make
+  it back to the app on a phone. Desktop still uses the hand-off, where it is reliable.
+- The settings tab shows how full the connected pCloud account is. A full account
+  refuses every upload with an error that says nothing about space, so it's worth
+  seeing coming.
 - Logging in uses pCloud's own OAuth sign-in page (opened in your browser) — the plugin
   never sees your password, only the access token pCloud hands back afterward. The pCloud
   app behind that sign-in page is registered once by this plugin's maintainer; installing
