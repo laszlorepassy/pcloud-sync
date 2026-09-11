@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the private source at the released tag
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: laszlorepassy/obsidian-pcloud-sync
           ref: ${{ inputs.version }}
@@ -51,7 +51,7 @@ jobs:
           ssh-key: ${{ secrets.PRIVATE_SOURCE_DEPLOY_KEY }}
           path: source
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "20"
           cache: npm
@@ -81,7 +81,7 @@ jobs:
           fi
 
       - name: Attest the build provenance
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             source/main.js
