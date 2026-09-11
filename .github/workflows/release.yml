@@ -9,7 +9,7 @@
 # is the whole reason the build happens here rather than in the private source
 # repo: an attestation issued there would name that repo, and nothing anyone
 # can see would line up with it. So the source is checked out *into* this
-# workflow instead, at the tag being released, using a read-only token.
+# workflow instead, at the tag being released, via a read-only deploy key.
 #
 # scripts/release.mjs in the private repo drives this: it verifies, bumps and
 # tags both repos, creates the GitHub Release here as a **draft**, then
@@ -43,10 +43,12 @@ jobs:
         with:
           repository: laszlorepassy/obsidian-pcloud-sync
           ref: ${{ inputs.version }}
-          # A fine-grained PAT with read-only Contents access to the private
-          # source repo, stored as a secret here. The default GITHUB_TOKEN is
-          # scoped to this repository and cannot see the source.
-          token: ${{ secrets.PRIVATE_SOURCE_TOKEN }}
+          # A read-only deploy key for the source repo, held as a secret here.
+          # The default GITHUB_TOKEN is scoped to this repository and cannot see
+          # the source at all. A deploy key rather than a PAT because it's the
+          # narrower credential of the two: one repository, read-only, and no
+          # reach into anything else the account owns.
+          ssh-key: ${{ secrets.PRIVATE_SOURCE_DEPLOY_KEY }}
           path: source
 
       - uses: actions/setup-node@v4
