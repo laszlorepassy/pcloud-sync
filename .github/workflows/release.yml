@@ -1,0 +1,101 @@
+# Builds the release assets here, in the repo users actually download from, so
+# GitHub can issue artifact attestations for them — a cryptographic statement
+# that this exact main.js came out of this build, of this commit, in this repo.
+# A user (or Obsidian's review) can then check it with:
+#
+#     gh attestation verify main.js --repo laszlorepassy/pcloud-sync
+#
+# Attestations are bound to the repository whose workflow produced them, which
+# is the whole reason the build happens here rather than in the private source
+# repo: an attestation issued there would name that repo, and nothing anyone
+# can see would line up with it. So the source is checked out *into* this
+# workflow instead, at the tag being released, using a read-only token.
+#
+# scripts/release.mjs in the private repo drives this: it verifies, bumps and
+# tags both repos, creates the GitHub Release here as a **draft**, then
+# dispatches this workflow and waits for it. The release stays a draft until
+# the attested assets are actually attached, so BRAT and "download the latest
+# release" never see a release with nothing in it.
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version being released — must match an existing tag in both repos, e.g. 2.2.0"
+        required: true
+        type: string
+
+permissions:
+  # Attaching assets to, and publishing, the release.
+  contents: write
+  # The two attestations need: a signing identity for this run, and somewhere
+  # to record the result.
+  id-token: write
+  attestations: write
+
+jobs:
+  build-attest-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the private source at the released tag
+        uses: actions/checkout@v4
+        with:
+          repository: laszlorepassy/obsidian-pcloud-sync
+          ref: ${{ inputs.version }}
+          # A fine-grained PAT with read-only Contents access to the private
+          # source repo, stored as a secret here. The default GITHUB_TOKEN is
+          # scoped to this repository and cannot see the source.
+          token: ${{ secrets.PRIVATE_SOURCE_TOKEN }}
+          path: source
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: source/package-lock.json
+
+      # `npm ci` rather than `npm install`: the lockfile is what makes this
+      # build reproducible, and reproducibility is the claim the attestation is
+      # making.
+      - name: Install dependencies
+        working-directory: source
+        run: npm ci
+
+      - name: Build
+        working-directory: source
+        run: npm run build
+
+      # Cheap guard against releasing the wrong commit: the tag was resolved
+      # above, but nothing so far has confirmed the source at that tag actually
+      # calls itself this version.
+      - name: Verify the built manifest matches the requested version
+        working-directory: source
+        run: |
+          built="$(node -p "require('./manifest.json').version")"
+          if [ "$built" != "${{ inputs.version }}" ]; then
+            echo "::error::manifest.json at tag ${{ inputs.version }} says $built — refusing to publish a mismatched release."
+            exit 1
+          fi
+
+      - name: Attest the build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            source/main.js
+            source/manifest.json
+            source/styles.css
+
+      # Upload and publish in one step so a release can never sit published
+      # without its assets: --clobber replaces anything already attached (a
+      # re-run of this workflow for the same version), and --draft=false is
+      # what makes the release visible to BRAT and to Obsidian.
+      - name: Attach the attested assets and publish the release
+        working-directory: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ inputs.version }}" main.js manifest.json styles.css \
+            --clobber --repo "${{ github.repository }}"
+          gh release edit "${{ inputs.version }}" \
+            --draft=false --latest --repo "${{ github.repository }}"
