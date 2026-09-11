@@ -36,6 +36,17 @@ into.
 - Binary files (images, attachments) have no meaningful way to merge their bytes —
   both versions survive there: the newer one at the original path, the older one next
   to it as a timestamped copy.
+- Obsidian's own settings JSON (`app.json`, `community-plugins.json`, `hotkeys.json`
+  and the rest of the config folder) is the exception to that: it is merged **key by
+  key** against the last-agreed version, so a plugin enabled on the phone and a font
+  changed on the laptop both survive, and no conflict copy is left behind — a copy of
+  `app.json` is litter nothing ever reads. Only a setting each side moved in a
+  different direction needs a winner (the newer file), and those keys are named in the
+  sync report.
+- A sync that would delete most of the vault on one side stops and asks first — and
+  offers to **copy the surviving side back instead** of deleting, which is what an
+  unexpectedly empty remote folder (a switched pCloud account, a re-created folder, a
+  reset manifest) almost always calls for.
 - On mobile, signing in leads with pCloud's copy-a-code method rather than the
   browser hand-off — the `obsidian://` link that hand-off relies on often doesn't make
   it back to the app on a phone. Desktop still uses the hand-off, where it is reliable.
@@ -67,7 +78,10 @@ into.
   `.trash/**`, `.git/**` — these are per-device state, not content. The list can be
   extended or narrowed in the settings.
 - A `.vault-clone-manifest.json` file is created at the root of the remote folder to
-  track what's out there and its hashes — don't edit it by hand.
+  track what's out there and its hashes — don't edit it by hand. Once per device the
+  plugin also checks the folder itself against that index: a file the index lists but
+  pCloud doesn't actually hold is uploaded again from this device's copy, rather than
+  quietly staying unreachable from every device.
 - A deletion never beats an edit: if you deleted a file on one side while it was
   changed on the other in the meantime, the edit wins and the file comes back where
   it was deleted.
