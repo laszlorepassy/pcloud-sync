@@ -91,6 +91,12 @@ into.
   where the last left off, so every attempt makes real progress even if it's cut short.
 - Files past the mobile size limit are listed separately from failures, as "too large
   for this device" — they aren't broken, they just need a desktop.
+- A sync skips opening a file whose modification time and size haven't moved since it
+  was last read — that's what keeps a large vault fast. **Re-check every file** (in the
+  settings, or the command of the same name) throws that away and reads the whole vault
+  again. It's the way to settle any doubt that a device's record of a file has drifted
+  out of step with the file itself, since an ordinary sync would never open it again to
+  find out. Nothing is deleted; it simply takes considerably longer than a normal sync.
 
 ## Source code
 
