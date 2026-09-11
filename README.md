@@ -20,6 +20,14 @@ into.
 - Downloads always arrive in small pieces rather than all at once, and uploads or notes
   over 25 MB are skipped on mobile with a clear message rather than risking a crash —
   sync those from desktop instead.
+- **An interrupted sync picks up where it stopped.** Progress is written back to disk as
+  the sync runs, not only once it finishes, and a large download that was cut short —
+  a dropped connection, the app closed, the phone reclaiming memory — resumes from the
+  byte it reached instead of starting the file over. On a phone with a big vault, that's
+  the difference between getting there eventually and never finishing at all.
+- Individual transfers retry a few times before giving up, and a pCloud download link
+  that expired or stopped working after a network change is quietly replaced with a
+  fresh one mid-transfer.
 - If a Markdown note was edited on both sides since the last sync, the plugin
   **merges it paragraph by paragraph (line by line)** — a three-way (base/local/remote)
   merge algorithm. No separate "conflict" file is ever created: the losing (older)
@@ -58,7 +66,11 @@ into.
   changed on the other in the meantime, the edit wins and the file comes back where
   it was deleted.
 - A large vault's first full sync is naturally slower (every file has to be read and
-  hashed once) — after that, only files that actually changed get transferred.
+  hashed once) — after that, only files that actually changed get transferred. On a
+  phone it may well take several syncs to get through that first one; each picks up
+  where the last left off, so every attempt makes real progress even if it's cut short.
+- Files past the mobile size limit are listed separately from failures, as "too large
+  for this device" — they aren't broken, they just need a desktop.
 
 ## Source code
 
