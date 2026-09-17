@@ -25,6 +25,10 @@ into.
   a dropped connection, the app closed, the phone reclaiming memory — resumes from the
   byte it reached instead of starting the file over. On a phone with a big vault, that's
   the difference between getting there eventually and never finishing at all.
+- **The screen stays on while a full sync runs**, so a phone or tablet doesn't doze off
+  and freeze the sync halfway (a sleeping device pauses Obsidian entirely). It only holds
+  while Obsidian is in front — switching to another app still pauses the sync, which then
+  resumes from where it stopped.
 - Individual transfers retry a few times before giving up, and a pCloud download link
   that expired or stopped working after a network change is quietly replaced with a
   fresh one mid-transfer.
