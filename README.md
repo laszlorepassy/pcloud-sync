@@ -40,13 +40,20 @@ into.
 - Binary files (images, attachments) have no meaningful way to merge their bytes —
   both versions survive there: the newer one at the original path, the older one next
   to it as a timestamped copy.
-- Obsidian's own settings JSON (`app.json`, `community-plugins.json`, `hotkeys.json`
+- Obsidian's own settings JSON (`app.json`, `appearance.json`, `hotkeys.json`
   and the rest of the config folder) is the exception to that: it is merged **key by
-  key** against the last-agreed version, so a plugin enabled on the phone and a font
-  changed on the laptop both survive, and no conflict copy is left behind — a copy of
+  key** against the last-agreed version, so a CSS snippet enabled on the phone and a
+  theme changed on the laptop both survive, and no conflict copy is left behind — a copy of
   `app.json` is litter nothing ever reads. Only a setting each side moved in a
   different direction needs a winner (the newer file), and those keys are named in the
   sync report.
+- **What belongs to the device stays on the device**: which plugins are enabled
+  (`community-plugins.json`, `core-plugins.json`) never syncs at all, and the font
+  size — `baseFontSize`, plus the "Ctrl+scroll / pinch changes font size" toggle
+  beside it — is left out of `appearance.json` as it syncs, so each device keeps its
+  own while the theme, accent color and CSS snippets still travel. A phone and a
+  laptop have no business sharing a font size or a plugin list. (Zoom needs no rule:
+  desktop Obsidian keeps its zoom level outside the vault, and mobile has none.)
 - A sync that would delete most of the vault on one side stops and asks first — and
   offers to **copy the surviving side back instead** of deleting, which is what an
   unexpectedly empty remote folder (a switched pCloud account, a re-created folder, a
