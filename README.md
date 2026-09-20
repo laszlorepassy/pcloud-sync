@@ -11,12 +11,16 @@ server is involved, and nothing is sent anywhere except to the pCloud account yo
 into.
 
 - One **sync button** (ribbon icon, spins while syncing) — no separate upload/download,
-  both directions run in a single pass.
+  both directions run in a single pass. Only one sync ever runs at a time, and however
+  many times the button is tapped there is only ever one indicator on screen — naming
+  the file being synced right now, so a long pass is never just a spinner.
 - Opening or leaving a note runs a quick, single-file sync **quietly in the
   background** — nothing visible happens by default. A full sync also runs
   automatically at startup and every 10 minutes, just as quietly.
 - Up to **3 files** transfer at once on desktop (1 on mobile, and large files always
-  get a lane of their own) — small notes still sync at full speed either way.
+  get a lane of their own) — small notes still sync at full speed either way. **The
+  small files go first**, so a sync cut short on a phone has settled as many files as
+  it could rather than half of one video.
 - Downloads always arrive in small pieces rather than all at once, and uploads or notes
   over 25 MB are skipped on mobile with a clear message rather than risking a crash —
   sync those from desktop instead.
@@ -40,20 +44,13 @@ into.
 - Binary files (images, attachments) have no meaningful way to merge their bytes —
   both versions survive there: the newer one at the original path, the older one next
   to it as a timestamped copy.
-- Obsidian's own settings JSON (`app.json`, `appearance.json`, `hotkeys.json`
-  and the rest of the config folder) is the exception to that: it is merged **key by
-  key** against the last-agreed version, so a CSS snippet enabled on the phone and a
-  theme changed on the laptop both survive, and no conflict copy is left behind — a copy of
-  `app.json` is litter nothing ever reads. Only a setting each side moved in a
-  different direction needs a winner (the newer file), and those keys are named in the
-  sync report.
-- **What belongs to the device stays on the device**: which plugins are enabled
-  (`community-plugins.json`, `core-plugins.json`) never syncs at all, and the font
-  size — `baseFontSize`, plus the "Ctrl+scroll / pinch changes font size" toggle
-  beside it — is left out of `appearance.json` as it syncs, so each device keeps its
-  own while the theme, accent color and CSS snippets still travel. A phone and a
-  laptop have no business sharing a font size or a plugin list. (Zoom needs no rule:
-  desktop Obsidian keeps its zoom level outside the vault, and mobile has none.)
+- **Obsidian's own settings never sync.** Everything in the `.obsidian` folder — the
+  font size, which plugins are enabled, hotkeys, the theme, CSS snippets, each
+  plugin's own stored data — describes how one device is set up rather than what the
+  vault holds, so every device keeps its own: nothing in there is uploaded, downloaded
+  or deleted. A settings file an older version already copied up to pCloud is left
+  where it is, inert — nothing takes it down again, and nothing deletes it from the
+  other devices either.
 - A sync that would delete most of the vault on one side stops and asks first — and
   offers to **copy the surviving side back instead** of deleting, which is what an
   unexpectedly empty remote folder (a switched pCloud account, a re-created folder, a
@@ -82,12 +79,11 @@ into.
 
 ## Good to know
 
-- `.obsidian/plugins/pcloud-vault-clone/` — where this plugin keeps its own settings,
-  local cache, and the last-agreed text snapshot Markdown merging needs — is always
-  excluded from the sync.
-- Also excluded by default: `.obsidian/workspace.json`, `.obsidian/workspace-mobile.json`,
-  `.trash/**`, `.git/**` — these are per-device state, not content. The list can be
-  extended or narrowed in the settings.
+- The whole config folder (`.obsidian/`, or whatever the vault calls it) stays out of
+  the sync — this plugin's own settings, its cache and the last-agreed text snapshot
+  Markdown merging needs included.
+- Excluded by default on top of that: `.trash/**`, `.git/**` — per-device state, not
+  content. The list can be extended or narrowed in the settings.
 - A `.vault-clone-manifest.json` file is created at the root of the remote folder to
   track what's out there and its hashes — don't edit it by hand. Once per device the
   plugin also checks the folder itself against that index: a file the index lists but
