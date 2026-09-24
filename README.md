@@ -14,9 +14,17 @@ into.
   both directions run in a single pass. Only one sync ever runs at a time, and however
   many times the button is tapped there is only ever one indicator on screen — naming
   the file being synced right now, so a long pass is never just a spinner.
-- Opening or leaving a note runs a quick, single-file sync **quietly in the
-  background** — nothing visible happens by default. A full sync also runs
-  automatically at startup and every 10 minutes, just as quietly.
+- Switching notes runs a quick sync of the note you left and the one you opened —
+  one pass for both, **quietly in the background**; nothing visible happens by
+  default. A full sync runs at startup and then every hour, just as quietly; in
+  between, every 10 minutes, only what changed is synced — the files Obsidian saw
+  you edit, add, move or delete, and whatever another device changed in pCloud. On
+  a quiet vault that check is a single small request.
+- **Light on the device.** The remote index is only downloaded when another device
+  actually changed it, and the plugin's own settings file is only rewritten when
+  something in it changed. The last-agreed text of each note (what
+  paragraph-by-paragraph merging needs) is kept compressed in files of its own
+  inside the plugin's folder rather than inside its settings file.
 - Up to **3 files** transfer at once on desktop (1 on mobile, and large files always
   get a lane of their own) — small notes still sync at full speed either way. **The
   small files go first**, so a sync cut short on a phone has settled as many files as
