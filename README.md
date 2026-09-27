@@ -23,8 +23,9 @@ into.
 - **Light on the device.** The remote index is only downloaded when another device
   actually changed it, and the plugin's own settings file is only rewritten when
   something in it changed. The last-agreed text of each note (what
-  paragraph-by-paragraph merging needs) is kept compressed in files of its own
-  inside the plugin's folder rather than inside its settings file.
+  paragraph-by-paragraph merging needs) is kept compressed in a single file inside
+  the plugin's folder, added to rather than rewritten, instead of inside its
+  settings file.
 - Up to **3 files** transfer at once on desktop (1 on mobile, and large files always
   get a lane of their own) — small notes still sync at full speed either way. **The
   small files go first**, so a sync cut short on a phone has settled as many files as
