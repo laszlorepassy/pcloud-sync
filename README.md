@@ -116,6 +116,11 @@ into.
   again. It's the way to settle any doubt that a device's record of a file has drifted
   out of step with the file itself, since an ordinary sync would never open it again to
   find out. Nothing is deleted; it simply takes considerably longer than a normal sync.
+- **Upload a troubleshooting log** (in the settings, off by default) keeps a log of what
+  this device's syncs did — file names and counts — and uploads it into the vault's own
+  pCloud folder, as `.pcloud-sync-debug/<device>.log`. It goes nowhere but your pCloud,
+  and is there so a sync misbehaving on a phone or tablet, where the console can't be
+  read, can be looked into from another device.
 
 ## Source code
 
