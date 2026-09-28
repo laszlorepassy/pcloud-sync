@@ -63,7 +63,10 @@ into.
 - A sync that would delete most of the vault on one side stops and asks first — and
   offers to **copy the surviving side back instead** of deleting, which is what an
   unexpectedly empty remote folder (a switched pCloud account, a re-created folder, a
-  reset manifest) almost always calls for.
+  reset manifest) almost always calls for. It asks once the files have been checked and
+  carries straight on with your answer, without checking them all again. A background
+  sync can't ask, so it tells you once that syncing is on hold; tap the sync icon (even
+  while a sync is running) to answer.
 - On mobile, signing in leads with pCloud's copy-a-code method rather than the
   browser hand-off — the `obsidian://` link that hand-off relies on often doesn't make
   it back to the app on a phone. Desktop still uses the hand-off, where it is reliable.
