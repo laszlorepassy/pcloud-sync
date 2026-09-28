@@ -19,7 +19,11 @@ into.
   default. A full sync runs at startup and then every hour, just as quietly; in
   between, every 10 minutes, only what changed is synced — the files Obsidian saw
   you edit, add, move or delete, and whatever another device changed in pCloud. On
-  a quiet vault that check is a single small request.
+  a quiet vault that check is a single small request. A full sync recognises
+  unchanged files from what Obsidian already knows about them instead of asking the
+  disk about each one, so it takes seconds rather than minutes on a phone; every
+  12 hours it asks the disk after all, so a file another app changed without
+  Obsidian noticing is picked up within half a day at the latest.
 - **Light on the device.** The remote index is only downloaded when another device
   actually changed it, and the plugin's own settings file is only rewritten when
   something in it changed. The last-agreed text of each note (what
