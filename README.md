@@ -59,7 +59,9 @@ into.
   to it as a timestamped copy.
 - **Obsidian's own settings never sync — except the bookmarks.** `.obsidian/bookmarks.json`
   describes the vault rather than the device, so it syncs like a note (the newer version
-  wins, the older one is kept beside it) and is picked up by the hourly full sync.
+  wins, the older one is kept beside it): a change goes up with the next ten-minute
+  sync, and one that comes down shows up in the bookmarks pane straight away, without
+  a restart.
   Everything else in the `.obsidian` folder — the
   font size, which plugins are enabled, hotkeys, the theme, CSS snippets, each
   plugin's own stored data — describes how one device is set up rather than what the
