@@ -57,10 +57,9 @@ into.
 - Binary files (images, attachments) have no meaningful way to merge their bytes —
   both versions survive there: the newer one at the original path, the older one next
   to it as a timestamped copy.
-- **Obsidian's settings sync too — all but the plugins and the open tabs.** Every
+- **Obsidian's settings sync too — all but the plugins, which plugins are enabled, and the open tabs.** Every
   settings file at the top of the `.obsidian` folder goes along: bookmarks, the daily
-  note's folder and format, the template folder, hotkeys, property types, which core and
-  community plugins are enabled, `app.json`, `appearance.json` — and the `themes` and
+  note's folder and format, the template folder, hotkeys, property types, `app.json`, `appearance.json` — and the `themes` and
   `snippets` folders the appearance settings point to. So a vault copied from pCloud
   onto a new device arrives set up the same way. Settings merge whole-file (the newer
   version wins, the older one is kept beside it), with one exception: on a device's very
@@ -68,12 +67,13 @@ into.
   written don't overwrite the settings every other device uses (the device's own copy is
   still kept beside it). Bookmarks, the daily-note, template and other core-plugin
   settings, hotkeys and property types that come down take effect straight away; the
-  rest (theme, enabled plugins, editor options) from the next start of Obsidian, which a
-  notice says. What stays on each device: the `plugins` folder — each plugin's code and
+  rest (theme, editor options) from the next start of Obsidian, which a
+  notice says. What stays on each device: the lists of enabled core and community plugins
+  (`core-plugins.json`, `community-plugins.json`, so the phone and the desktop can run
+  different sets), the `plugins` folder — each plugin's code and
   stored data, this plugin's own login and sync state among them — and `workspace.json`
   / `workspace-mobile.json`, the open tabs and pane layout. Plugins themselves are not
-  installed by the sync: on a new device install them once, and the enabled-plugins list
-  that arrived turns them on.
+  installed or switched on by the sync: on a new device install and enable them once.
 - A sync that would delete most of the vault on one side stops and asks first — and
   offers to **copy the surviving side back instead** of deleting, which is what an
   unexpectedly empty remote folder (a switched pCloud account, a re-created folder, a
