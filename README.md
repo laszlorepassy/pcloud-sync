@@ -74,13 +74,24 @@ into.
   stored data, this plugin's own login and sync state among them — and `workspace.json`
   / `workspace-mobile.json`, the open tabs and pane layout. Plugins themselves are not
   installed or switched on by the sync: on a new device install and enable them once.
-- A sync that would delete most of the vault on one side stops and asks first — and
+- A sync that would delete a fifth or more of the vault (at least 25 files) on one side stops and asks first — and
   offers to **copy the surviving side back instead** of deleting, which is what an
   unexpectedly empty remote folder (a switched pCloud account, a re-created folder, a
   reset manifest) almost always calls for. It asks once the files have been checked and
   carries straight on with your answer, without checking them all again. A background
   sync can't ask, so it tells you once that syncing is on hold; tap the sync icon (even
   while a sync is running) to answer.
+- The same goes for a sync that would merge a fifth or more of the vault's files (at
+  least 25) changed on both sides, and for a device connecting to a folder that already
+  holds different versions of its files: it asks whose version keeps the name — pCloud's,
+  this device's, or the newer one — and the other is always kept beside it as a
+  "(conflict …)" copy.
+- Changing the remote folder asks for confirmation (showing how many files the new
+  folder lists) and is refused while a sync is running; it is not saved while you type.
+  A device's sync state belongs to the folder and account it was built against: after a
+  change, or a switch of pCloud account, the device forgets it and its first sync with
+  the new folder runs as a connection — nothing is deleted, conflicts are asked about.
+  No sync starts by itself afterwards; use the sync icon.
 - On mobile, signing in leads with pCloud's copy-a-code method rather than the
   browser hand-off — the `obsidian://` link that hand-off relies on often doesn't make
   it back to the app on a phone. Desktop still uses the hand-off, where it is reliable.
