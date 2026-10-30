@@ -34,9 +34,30 @@ into.
   get a lane of their own) — small notes still sync at full speed either way. **The
   small files go first**, so a sync cut short on a phone has settled as many files as
   it could rather than half of one video.
-- Downloads always arrive in small pieces rather than all at once, and uploads or notes
-  over 25 MB are skipped on mobile with a clear message rather than risking a crash —
-  sync those from desktop instead.
+- Downloads always arrive in small pieces rather than all at once. There is no size
+  limit on mobile, but Obsidian gives a plugin no way to read part of a file on a phone,
+  so **uploading a large file there, and reading it the first time, holds the whole file
+  in memory**. With a very large file (hundreds of MB) the mobile app can be shut down by
+  the system partway through — upload such files from a computer, where they are read
+  from disk in pieces (above 64 MB) and a slow line gets time to finish (an upload is
+  allowed at least as long as it takes at 128 KB/s).
+- **Downloads are checked.** An HTTP error is an error, never saved as the file, and a
+  download whose content differs from what the remote index promised is compared with
+  what pCloud itself reports before anything on your device is touched.
+- **Nothing a sync deletes or overwrites is lost for 30 days.** The old content goes to
+  a **quarantine** in the plugin's folder (up to 10 GB, never less than the last 7 days)
+  and can be restored from the settings or the "Quarantine…" command; a file whose place
+  is taken by something else comes back beside it as a "(conflict …)" copy. It takes up
+  space on the device, is never synced, and is removed if the plugin is uninstalled.
+- **Show sync activity** (command) lists what this device's syncs recently did to files
+  — deletions, overwrites, merges, uploads — read from a local log kept for 12 months.
+  Always on, never uploaded.
+- **The first sync with a folder is always started by hand,** and shows a preview first:
+  how many files it would download, upload, delete or merge, how big, and where. On a new
+  device or after changing the remote folder nothing syncs in the background until you
+  tap the sync icon. **Preview sync** shows the same on demand and changes nothing.
+- A file that is missing from the remote index but still in pCloud is not deleted from
+  your device: the index entry was lost, so it is put back.
 - **An interrupted sync picks up where it stopped.** Progress is written back to disk as
   the sync runs, not only once it finishes, and a large download that was cut short —
   a dropped connection, the app closed, the phone reclaiming memory — resumes from the
@@ -120,7 +141,11 @@ into.
   out of the sync — this plugin's own settings, its cache and the last-agreed text
   snapshot Markdown merging needs included.
 - Excluded by default on top of that: `.trash/**`, `.git/**` — per-device state, not
-  content. The list can be extended or narrowed in the settings.
+  content. The list can be extended or narrowed in the settings (type, then **Apply**).
+  Excluding a path affects **this device only**: the file and its index entry stay in
+  pCloud and other devices keep syncing it. Deleting the excluded files from pCloud is a
+  separate, confirmed step (**Remove excluded files from pCloud**); other devices that
+  don't exclude them will then treat them as deleted.
 - A `.vault-clone-manifest.json` file is created at the root of the remote folder to
   track what's out there and its hashes — don't edit it by hand. Once per device the
   plugin also checks the folder itself against that index: a file the index lists but
@@ -133,8 +158,8 @@ into.
   hashed once) — after that, only files that actually changed get transferred. On a
   phone it may well take several syncs to get through that first one; each picks up
   where the last left off, so every attempt makes real progress even if it's cut short.
-- Files past the mobile size limit are listed separately from failures, as "too large
-  for this device" — they aren't broken, they just need a desktop.
+- A device that cannot take a file reports it separately from failures, as "too large
+  for this device" (no device is limited this way at the moment).
 - A sync skips opening a file whose modification time and size haven't moved since it
   was last read — that's what keeps a large vault fast. **Re-check every file** (in the
   settings, or the command of the same name) throws that away and reads the whole vault
